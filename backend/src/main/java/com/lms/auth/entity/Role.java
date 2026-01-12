@@ -1,8 +1,5 @@
 package com.lms.auth.entity;
 
-/**
- * User Roles in the system
- */
 public enum Role {
     STAFF("Staff", "Regular employee"),
     MANAGER("Manager", "Can approve/reject leave requests"),

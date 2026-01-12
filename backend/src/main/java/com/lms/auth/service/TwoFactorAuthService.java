@@ -20,9 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-/**
- * Two-Factor Authentication Service using Google Authenticator
- */
 @Service
 @RequiredArgsConstructor
 public class TwoFactorAuthService {
@@ -31,9 +28,6 @@ public class TwoFactorAuthService {
     private final GoogleAuthenticator googleAuthenticator;
     private final JwtUtil jwtUtil;
 
-    /**
-     * Generate 2FA secret and QR code for user
-     */
     @Transactional
     public AuthDto.TwoFactorSetupResponse setupTwoFactor(Long userId) {
         User user = userRepository.findById(userId)
@@ -65,9 +59,6 @@ public class TwoFactorAuthService {
         return response;
     }
 
-    /**
-     * Enable 2FA after verifying the code
-     */
     @Transactional
     public AuthDto.AuthResponse enableTwoFactor(Long userId, String verificationCode) {
         User user = userRepository.findById(userId)
@@ -93,9 +84,6 @@ public class TwoFactorAuthService {
         return response;
     }
 
-    /**
-     * Disable 2FA
-     */
     @Transactional
     public AuthDto.AuthResponse disableTwoFactor(Long userId, String verificationCode) {
         User user = userRepository.findById(userId)
@@ -122,9 +110,6 @@ public class TwoFactorAuthService {
         return response;
     }
 
-    /**
-     * Verify 2FA code during login
-     */
     public AuthDto.AuthResponse verifyTwoFactorCode(String email, String code) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -143,7 +128,6 @@ public class TwoFactorAuthService {
         // Generate JWT token
         String token = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getRole().name());
 
-        // Return response
         AuthDto.AuthResponse response = new AuthDto.AuthResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
@@ -157,9 +141,6 @@ public class TwoFactorAuthService {
         return response;
     }
 
-    /**
-     * Generate QR code image as base64 string
-     */
     private String generateQRCodeImage(String text) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();

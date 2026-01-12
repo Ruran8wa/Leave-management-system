@@ -8,9 +8,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-/**
- * DTOs for Leave requests/responses
- */
 public class LeaveDto {
     
     @Data

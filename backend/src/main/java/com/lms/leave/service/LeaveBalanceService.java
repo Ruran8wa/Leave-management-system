@@ -12,14 +12,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Leave Balance Service - Manages leave allocations, accruals, and carryover
- * 
- * Accrual Rules:
- * - Personal Time Off: 1.66 days per month (20 days per year)
- * - Carryover: Max 5 days to next year
- * - Carryover expires: January 31st of next year
- */
 @Service
 @RequiredArgsConstructor
 public class LeaveBalanceService {
@@ -31,12 +23,8 @@ public class LeaveBalanceService {
     private static final int ANNUAL_PTO_DAYS = 20;
     private static final int MAX_CARRYOVER = 5;
     
-    /**
-     * Initialize leave balance for a new user
-     */
     @Transactional
     public LeaveBalance initializeBalance(Long userId, LeaveType leaveType, Integer year) {
-        // Check if balance already exists
         var existing = leaveBalanceRepository
                 .findByUserIdAndLeaveTypeAndYear(userId, leaveType, year);
         
@@ -49,7 +37,6 @@ public class LeaveBalanceService {
         balance.setLeaveType(leaveType);
         balance.setYear(year);
         
-        // Set allocation based on leave type
         if (leaveType == LeaveType.PERSONAL_TIME_OFF) {
             balance.setTotalAllocated(ANNUAL_PTO_DAYS);
         } else {
@@ -63,26 +50,16 @@ public class LeaveBalanceService {
         return leaveBalanceRepository.save(balance);
     }
     
-    /**
-     * Calculate accrued days for PTO up to current month
-     * 1.66 days per month * number of months passed
-     */
     public Integer calculateAccruedDays(int monthsPassed) {
         BigDecimal accrued = MONTHLY_ACCRUAL.multiply(new BigDecimal(monthsPassed));
         return accrued.setScale(0, RoundingMode.DOWN).intValue();
     }
     
-    /**
-     * Get current accrued days for the year (up to current month)
-     */
     public Integer getCurrentAccruedDays() {
         int currentMonth = LocalDate.now().getMonthValue();
         return calculateAccruedDays(currentMonth);
     }
     
-    /**
-     * Get or create leave balance for user
-     */
     @Transactional
     public LeaveBalance getOrCreateBalance(Long userId, LeaveType leaveType, Integer year) {
         return leaveBalanceRepository
@@ -90,16 +67,10 @@ public class LeaveBalanceService {
                 .orElseGet(() -> initializeBalance(userId, leaveType, year));
     }
     
-    /**
-     * Get all balances for a user in a specific year
-     */
     public List<LeaveBalance> getUserBalances(Long userId, Integer year) {
         return leaveBalanceRepository.findByUserIdAndYear(userId, year);
     }
     
-    /**
-     * Deduct days when leave is approved
-     */
     @Transactional
     public void deductLeave(Long userId, LeaveType leaveType, Integer year, Integer days) {
         LeaveBalance balance = getOrCreateBalance(userId, leaveType, year);
@@ -121,9 +92,6 @@ public class LeaveBalanceService {
         leaveBalanceRepository.save(balance);
     }
     
-    /**
-     * Add days to pending when leave is requested
-     */
     @Transactional
     public void addPending(Long userId, LeaveType leaveType, Integer year, Integer days) {
         LeaveBalance balance = getOrCreateBalance(userId, leaveType, year);
@@ -131,9 +99,6 @@ public class LeaveBalanceService {
         leaveBalanceRepository.save(balance);
     }
     
-    /**
-     * Remove days from pending when leave is rejected or cancelled
-     */
     @Transactional
     public void removePending(Long userId, LeaveType leaveType, Integer year, Integer days) {
         LeaveBalance balance = getOrCreateBalance(userId, leaveType, year);
@@ -141,10 +106,6 @@ public class LeaveBalanceService {
         leaveBalanceRepository.save(balance);
     }
     
-    /**
-     * Process year-end carryover
-     * Max 5 days can be carried over, expires Jan 31 of next year
-     */
     @Transactional
     public void processYearEndCarryover(Long userId, Integer fromYear) {
         var balances = leaveBalanceRepository.findByUserIdAndYear(userId, fromYear);
@@ -155,7 +116,6 @@ public class LeaveBalanceService {
                 int carryover = Math.min(remaining, MAX_CARRYOVER);
                 
                 if (carryover > 0) {
-                    // Create or update next year's balance
                     LeaveBalance newBalance = getOrCreateBalance(
                             userId, 
                             LeaveType.PERSONAL_TIME_OFF, 
@@ -173,9 +133,6 @@ public class LeaveBalanceService {
         }
     }
     
-    /**
-     * Admin function: Manually adjust leave balance
-     */
     @Transactional
     public LeaveBalance adjustBalance(Long userId, LeaveType leaveType, Integer year, 
                                        Integer adjustment, String reason) {
@@ -184,9 +141,6 @@ public class LeaveBalanceService {
         return leaveBalanceRepository.save(balance);
     }
     
-    /**
-     * Check if user has sufficient balance for leave request
-     */
     public boolean hasAvailableBalance(Long userId, LeaveType leaveType, Integer year, Integer days) {
         if (leaveType != LeaveType.PERSONAL_TIME_OFF) {
             return true;  // Unlimited leave types always allowed

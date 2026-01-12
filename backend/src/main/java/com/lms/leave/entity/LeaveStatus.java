@@ -1,8 +1,5 @@
 package com.lms.leave.entity;
 
-/**
- * Status of leave requests
- */
 public enum LeaveStatus {
     PENDING("Pending Review"),
     APPROVED("Approved"),

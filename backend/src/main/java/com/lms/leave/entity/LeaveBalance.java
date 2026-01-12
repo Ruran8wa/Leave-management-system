@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Leave Balance - Tracks leave allocations and usage for each user
- * Particularly important for Personal Time Off (20 days/year)
- */
 @Data
 @Entity
 @Table(name = "leave_balances", uniqueConstraints = {
@@ -48,16 +44,10 @@ public class LeaveBalance extends BaseEntity {
     @Column
     private LocalDate carryOverExpiryDate;  // When carried over days expire (Jan 31)
     
-    /**
-     * Calculate remaining balance
-     */
     public Integer getRemaining() {
         return totalAllocated - used - pending;
     }
     
-    /**
-     * Calculate available balance (including carryover if not expired)
-     */
     public Integer getAvailable() {
         int available = getRemaining();
         if (carriedOver > 0 && carryOverExpiryDate != null && 
@@ -67,9 +57,6 @@ public class LeaveBalance extends BaseEntity {
         return available;
     }
     
-    /**
-     * Check if user can request this many days
-     */
     public boolean canRequest(Integer days) {
         return getAvailable() >= days;
     }

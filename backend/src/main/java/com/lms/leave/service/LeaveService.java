@@ -18,9 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Enhanced Leave Service - Full business logic for leave management
- */
 @Service
 @RequiredArgsConstructor
 public class LeaveService {
@@ -31,14 +28,10 @@ public class LeaveService {
     private final LeaveBalanceService leaveBalanceService;
     private final NotificationService notificationService;
     
-    /**
-     * Calculate working days between two dates (excluding weekends and public holidays)
-     */
     public Integer calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
         int workingDays = 0;
         LocalDate currentDate = startDate;
         
-        // Get public holidays in the range
         List<PublicHoliday> holidays = publicHolidayRepository
                 .findByDateBetween(startDate, endDate);
         List<LocalDate> holidayDates = holidays.stream()
@@ -58,24 +51,18 @@ public class LeaveService {
         return workingDays;
     }
     
-    /**
-     * Employee: Create leave request
-     */
     @Transactional
     public LeaveDto.LeaveResponse createLeaveRequest(LeaveDto.CreateLeaveRequest request) {
-        // Validate dates
         if (request.getEndDate().isBefore(request.getStartDate())) {
             throw new RuntimeException("End date cannot be before start date");
         }
         
-        // Calculate working days
         Integer workingDays = calculateWorkingDays(request.getStartDate(), request.getEndDate());
         
         if (workingDays == 0) {
             throw new RuntimeException("Leave request must include at least one working day");
         }
         
-        // Check balance availability for PTO
         if (!leaveBalanceService.hasAvailableBalance(
                 request.getUserId(), 
                 request.getLeaveType(), 
@@ -84,7 +71,6 @@ public class LeaveService {
             throw new RuntimeException("Insufficient leave balance");
         }
         
-        // Create leave
         Leave leave = new Leave();
         leave.setUserId(request.getUserId());
         leave.setStartDate(request.getStartDate());
@@ -120,9 +106,6 @@ public class LeaveService {
         return mapToResponse(savedLeave, employee, null, "Leave request submitted successfully");
     }
     
-    /**
-     * Manager/Admin: Approve or reject leave
-     */
     @Transactional
     public LeaveDto.LeaveResponse approveOrRejectLeave(
             Long leaveId, 
@@ -142,7 +125,6 @@ public class LeaveService {
         User employee = userRepository.findById(leave.getUserId())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         
-        // Update leave
         leave.setStatus(request.getStatus());
         leave.setApprovedBy(approverId);
         leave.setApprovalComments(request.getApprovalComments());
@@ -189,9 +171,6 @@ public class LeaveService {
         );
     }
     
-    /**
-     * Get leave balance for employee
-     */
     public List<LeaveDto.LeaveBalanceResponse> getLeaveBalance(Long userId, Integer year) {
         var balances = leaveBalanceService.getUserBalances(userId, year);
         
@@ -211,9 +190,6 @@ public class LeaveService {
         }).collect(Collectors.toList());
     }
     
-    /**
-     * Get colleagues currently on leave (today)
-     */
     public List<LeaveDto.ColleagueOnLeaveResponse> getColleaguesOnLeave() {
         LocalDate today = LocalDate.now();
         
@@ -235,9 +211,6 @@ public class LeaveService {
         }).collect(Collectors.toList());
     }
     
-    /**
-     * Get upcoming public holidays
-     */
     public List<PublicHoliday> getUpcomingPublicHolidays() {
         return publicHolidayRepository.findByDateAfter(LocalDate.now());
     }
@@ -259,9 +232,6 @@ public class LeaveService {
         return leaveRepository.findByStatus(status);
     }
     
-    /**
-     * Admin: Get pending leave requests from STAFF role users only
-     */
     public List<Leave> getPendingStaffLeaves() {
         List<Leave> pendingLeaves = leaveRepository.findByStatus(LeaveStatus.PENDING);
         
@@ -299,9 +269,6 @@ public class LeaveService {
         );
     }
     
-    /**
-     * Helper: Map entity to response DTO
-     */
     private LeaveDto.LeaveResponse mapToResponse(Leave leave, User employee, User approver, String message) {
         LeaveDto.LeaveResponse response = new LeaveDto.LeaveResponse();
         response.setId(leave.getId());

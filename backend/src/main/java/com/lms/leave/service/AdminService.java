@@ -14,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Admin Service - HR/Admin management functions
- */
 @Service
 @RequiredArgsConstructor
 public class AdminService {
@@ -26,9 +23,6 @@ public class AdminService {
     private final LeaveBalanceRepository leaveBalanceRepository;
     private final LeaveRepository leaveRepository;
     
-    /**
-     * Add a new public holiday
-     */
     @Transactional
     public PublicHoliday addPublicHoliday(PublicHoliday holiday) {
         if (publicHolidayRepository.existsByDate(holiday.getDate())) {
@@ -37,24 +31,15 @@ public class AdminService {
         return publicHolidayRepository.save(holiday);
     }
     
-    /**
-     * Remove a public holiday
-     */
     @Transactional
     public void removePublicHoliday(Long holidayId) {
         publicHolidayRepository.deleteById(holidayId);
     }
     
-    /**
-     * Get all public holidays
-     */
     public List<PublicHoliday> getAllPublicHolidays() {
         return publicHolidayRepository.findAll();
     }
     
-    /**
-     * Manually adjust employee leave balance
-     */
     @Transactional
     public LeaveBalance adjustEmployeeBalance(
             Long userId,
@@ -65,26 +50,16 @@ public class AdminService {
         return leaveBalanceService.adjustBalance(userId, leaveType, year, adjustment, reason);
     }
     
-    /**
-     * Get all leave balances for all users
-     */
     public List<LeaveBalance> getAllLeaveBalances() {
         return leaveBalanceRepository.findAll();
     }
     
-    /**
-     * Get user's leave balance for specific year
-     */
     public List<LeaveBalance> getUserLeaveBalance(Long userId, Integer year) {
         return leaveBalanceRepository.findByUserIdAndYear(userId, year);
     }
     
-    /**
-     * Process year-end carryover for all employees
-     */
     @Transactional
     public void processYearEndCarryover(Integer year) {
-        // Get all unique user IDs from leave balances
         List<Long> userIds = leaveBalanceRepository.findAll().stream()
                 .map(LeaveBalance::getUserId)
                 .distinct()
@@ -95,25 +70,16 @@ public class AdminService {
         }
     }
     
-    /**
-     * Generate leave report data for CSV/Excel export
-     */
     public List<Leave> generateLeaveReport(LocalDate startDate, LocalDate endDate) {
         return leaveRepository.findByStartDateBetween(startDate, endDate);
     }
     
-    /**
-     * Generate leave balance report for all employees
-     */
     public List<LeaveBalance> generateBalanceReport(Integer year) {
         return leaveBalanceRepository.findAll().stream()
                 .filter(balance -> balance.getYear().equals(year))
                 .toList();
     }
     
-    /**
-     * Get leave statistics
-     */
     public LeaveStatistics getLeaveStatistics(Integer year) {
         List<Leave> leaves = leaveRepository.findAll().stream()
                 .filter(leave -> leave.getStartDate().getYear() == year)
@@ -143,9 +109,6 @@ public class AdminService {
         );
     }
     
-    /**
-     * Leave Statistics DTO
-     */
     public record LeaveStatistics(
             long totalRequests,
             long approved,

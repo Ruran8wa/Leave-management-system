@@ -5,16 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-/**
- * DTOs (Data Transfer Objects) for Auth requests/responses
- */
 public class AuthDto {
     
-    /**
-     * Register Request DTO
-     * Note: Role is not included - all new users are registered as STAFF by default for security
-     * Admins must manually upgrade user roles through the admin panel
-     */
     @Data
     public static class RegisterRequest {
         @NotBlank(message = "Email is required")

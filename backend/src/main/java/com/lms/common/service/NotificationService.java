@@ -5,23 +5,10 @@ import com.lms.leave.entity.Leave;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-/**
- * Notification Service - Sends email notifications
- * 
- * This is a placeholder implementation.
- * In production, integrate with:
- * - Spring Mail (SMTP)
- * - SendGrid
- * - AWS SES
- * - Twilio SendGrid
- */
 @Slf4j
 @Service
 public class NotificationService {
     
-    /**
-     * Send notification when leave is approved
-     */
     public void sendLeaveApprovedNotification(User user, Leave leave, String approverName) {
         log.info("EMAIL: Sending leave approved notification to {} for leave ID {}", 
                 user.getEmail(), leave.getId());
@@ -48,9 +35,6 @@ public class NotificationService {
         log.info("EMAIL CONTENT:\nTo: {}\nSubject: {}\nBody: {}", user.getEmail(), subject, body);
     }
     
-    /**
-     * Send notification when leave is rejected
-     */
     public void sendLeaveRejectedNotification(User user, Leave leave, String approverName) {
         log.info("EMAIL: Sending leave rejected notification to {} for leave ID {}", 
                 user.getEmail(), leave.getId());
@@ -74,9 +58,6 @@ public class NotificationService {
         log.info("EMAIL CONTENT:\nTo: {}\nSubject: {}\nBody: {}", user.getEmail(), subject, body);
     }
     
-    /**
-     * Send notification to manager when new leave is requested
-     */
     public void sendLeaveRequestNotification(User manager, User employee, Leave leave) {
         log.info("EMAIL: Sending new leave request notification to manager {} for employee {}", 
                 manager.getEmail(), employee.getEmail());

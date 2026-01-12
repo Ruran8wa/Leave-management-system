@@ -7,9 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * User Entity - Represents users in the database
- */
 @Data
 @Entity
 @Table(name = "users")

@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Google Authenticator Configuration
- */
 @Configuration
 public class GoogleAuthConfig {
 

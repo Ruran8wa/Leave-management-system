@@ -4,6 +4,7 @@ import com.lms.auth.dto.AuthDto;
 import com.lms.auth.entity.Role;
 import com.lms.auth.entity.User;
 import com.lms.auth.repository.UserRepository;
+import com.lms.common.exception.UserAlreadyExistsException;
 import com.lms.config.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,30 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Auth Service - Business logic for authentication
- * 
- * @Service marks this as a service component
- * @RequiredArgsConstructor (Lombok) generates constructor for final fields
- * UserRepository is injected automatically (Dependency Injection)
- */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     
-    // Injected by Spring (like constructor injection in NestJS)
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     
     @Transactional
     public AuthDto.AuthResponse register(AuthDto.RegisterRequest request) {
-        // Check if user already exists
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("User with email " + request.getEmail() + " already exists");
+            throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exists");
         }
         
-        // Create new user
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword())); // Hash password with BCrypt
@@ -46,13 +37,11 @@ public class AuthService {
         user.setIsActive(true);
         user.setTwoFactorEnabled(false);
         
-        // Save to database
         User savedUser = userRepository.save(user);
         
         // Generate JWT token
         String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getId(), savedUser.getRole().name());
         
-        // Return response
         AuthDto.AuthResponse response = new AuthDto.AuthResponse();
         response.setId(savedUser.getId());
         response.setEmail(savedUser.getEmail());
@@ -66,23 +55,19 @@ public class AuthService {
     }
     
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
-        // Find user by email
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
         
-        // Check password with BCrypt
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
         
-        // Check if user is active
         if (!user.getIsActive()) {
             throw new RuntimeException("User account is inactive");
         }
         
         // If 2FA is enabled, require 2FA code
         if (Boolean.TRUE.equals(user.getTwoFactorEnabled())) {
-            // Return response indicating 2FA is required
             AuthDto.AuthResponse response = new AuthDto.AuthResponse();
             response.setId(user.getId());
             response.setEmail(user.getEmail());
@@ -94,7 +79,6 @@ public class AuthService {
         // Generate JWT token
         String token = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getRole().name());
         
-        // Return response
         AuthDto.AuthResponse response = new AuthDto.AuthResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());

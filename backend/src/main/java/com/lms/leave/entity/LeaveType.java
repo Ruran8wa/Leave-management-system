@@ -1,8 +1,5 @@
 package com.lms.leave.entity;
 
-/**
- * Leave Types available in the system
- */
 public enum LeaveType {
     PERSONAL_TIME_OFF("Personal Time Off", 20),  // 20 days per year
     SICK_LEAVE("Sick Leave", null),               // No limit

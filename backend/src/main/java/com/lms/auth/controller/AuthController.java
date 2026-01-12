@@ -19,13 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Auth Controller - Handles HTTP requests for authentication
- * 
- * @RestController combines @Controller and @ResponseBody
- * @RequestMapping defines the base path for all endpoints in this controller
- * @RequiredArgsConstructor injects AuthService automatically
- */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

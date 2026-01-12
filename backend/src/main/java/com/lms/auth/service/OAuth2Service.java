@@ -16,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * OAuth2 Service - Handles Google OAuth2 login
- */
 @Service
 @RequiredArgsConstructor
 public class OAuth2Service extends DefaultOAuth2UserService {
@@ -50,7 +47,6 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         Optional<User> existingUser = userRepository.findByEmail(email);
         
         if (existingUser.isPresent()) {
-            // Update existing user
             User user = existingUser.get();
             if (user.getOauthProvider() == null) {
                 user.setOauthProvider(registrationId);
@@ -59,7 +55,6 @@ public class OAuth2Service extends DefaultOAuth2UserService {
             user.setProfilePictureUrl(pictureUrl);
             userRepository.save(user);
         } else {
-            // Create new user
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setFirstName(firstName != null ? firstName : "");
@@ -82,7 +77,6 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         // Generate JWT token
         String token = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getRole().name());
 
-        // Return response
         AuthDto.AuthResponse response = new AuthDto.AuthResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());

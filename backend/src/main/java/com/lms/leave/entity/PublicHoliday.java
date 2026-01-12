@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Public Holiday Entity - Tracks public/company holidays
- */
 @Data
 @Entity
 @Table(name = "public_holidays")

@@ -8,11 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-/**
- * Base Entity Class
- * Similar to a base model in Prisma that all entities inherit from
- * Provides common fields like id, createdAt, updatedAt
- */
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

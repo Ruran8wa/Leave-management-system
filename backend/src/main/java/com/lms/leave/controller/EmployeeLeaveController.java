@@ -19,16 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Employee Leave Controller - Staff member functions
- * 
- * Endpoints:
- * - View leave balance
- * - Apply for leave
- * - Track application status
- * - View colleagues on leave
- * - View public holidays
- */
 @RestController
 @RequestMapping("/api/employee/leaves")
 @RequiredArgsConstructor
@@ -38,9 +28,6 @@ public class EmployeeLeaveController {
     
     private final LeaveService leaveService;
     
-    /**
-     * Apply for leave
-     */
     @PostMapping("/apply")
     public ResponseEntity<LeaveDto.LeaveResponse> applyForLeave(
             @Valid @RequestBody LeaveDto.CreateLeaveRequest request) {
@@ -52,9 +39,6 @@ public class EmployeeLeaveController {
         }
     }
     
-    /**
-     * View my leave balance for current year
-     */
     @GetMapping("/balance/{userId}")
     public ResponseEntity<List<LeaveDto.LeaveBalanceResponse>> getMyBalance(
             @PathVariable Long userId) {
@@ -64,9 +48,6 @@ public class EmployeeLeaveController {
         return ResponseEntity.ok(balances);
     }
     
-    /**
-     * View my leave balance for specific year
-     */
     @GetMapping("/balance/{userId}/{year}")
     public ResponseEntity<List<LeaveDto.LeaveBalanceResponse>> getMyBalanceForYear(
             @PathVariable Long userId,
@@ -76,27 +57,18 @@ public class EmployeeLeaveController {
         return ResponseEntity.ok(balances);
     }
     
-    /**
-     * View my leave requests (all statuses)
-     */
     @GetMapping("/my-leaves/{userId}")
     public ResponseEntity<List<Leave>> getMyLeaves(@PathVariable Long userId) {
         List<Leave> leaves = leaveService.getLeavesByUserId(userId);
         return ResponseEntity.ok(leaves);
     }
     
-    /**
-     * View specific leave request details
-     */
     @GetMapping("/{leaveId}")
     public ResponseEntity<Leave> getLeaveDetails(@PathVariable Long leaveId) {
         Leave leave = leaveService.getLeaveById(leaveId);
         return ResponseEntity.ok(leave);
     }
     
-    /**
-     * Cancel pending leave request
-     */
     @PatchMapping("/{leaveId}/cancel")
     public ResponseEntity<String> cancelLeave(
             @PathVariable Long leaveId,
@@ -109,9 +81,6 @@ public class EmployeeLeaveController {
         }
     }
     
-    /**
-     * View colleagues currently on leave
-     */
     @GetMapping("/colleagues-on-leave")
     public ResponseEntity<List<LeaveDto.ColleagueOnLeaveResponse>> getColleaguesOnLeave() {
         List<LeaveDto.ColleagueOnLeaveResponse> colleagues = 
@@ -119,9 +88,6 @@ public class EmployeeLeaveController {
         return ResponseEntity.ok(colleagues);
     }
     
-    /**
-     * View upcoming public holidays
-     */
     @GetMapping("/public-holidays")
     public ResponseEntity<List<PublicHoliday>> getPublicHolidays() {
         List<PublicHoliday> holidays = leaveService.getUpcomingPublicHolidays();

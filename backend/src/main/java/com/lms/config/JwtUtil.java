@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * JWT Utility Class - Handles JWT token generation and validation
- */
 @Component
 public class JwtUtil {
 

@@ -8,9 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Leave Balance Repository - Manages leave allocation tracking
- */
 @Repository
 public interface LeaveBalanceRepository extends JpaRepository<LeaveBalance, Long> {
     

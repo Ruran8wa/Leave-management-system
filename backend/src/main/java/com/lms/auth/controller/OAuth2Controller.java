@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * OAuth2 Controller - Handles OAuth2 callback endpoints
- */
 @RestController
 @RequestMapping("/api/auth/oauth2")
 @RequiredArgsConstructor

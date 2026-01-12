@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Leave Entity - Represents leave requests in the database
- */
 @Data
 @Entity
 @Table(name = "leaves")

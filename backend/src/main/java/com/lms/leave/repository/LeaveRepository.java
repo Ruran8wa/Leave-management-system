@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Leave Repository - Database operations for leaves
- * Spring Data JPA provides implementations automatically
- */
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Long> {
     

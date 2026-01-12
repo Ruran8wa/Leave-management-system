@@ -16,14 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Manager Leave Controller - Manager approval functions
- * 
- * Endpoints:
- * - View pending leave requests
- * - Approve/reject leave requests with comments
- * - View team leave calendar
- */
 @RestController
 @RequestMapping("/api/manager/leaves")
 @RequiredArgsConstructor
@@ -33,18 +25,12 @@ public class ManagerLeaveController {
     
     private final LeaveService leaveService;
     
-    /**
-     * Get all pending leave requests (for manager review)
-     */
     @GetMapping("/pending")
     public ResponseEntity<List<Leave>> getPendingLeaves() {
         List<Leave> pendingLeaves = leaveService.getLeavesByStatus(LeaveStatus.PENDING);
         return ResponseEntity.ok(pendingLeaves);
     }
     
-    /**
-     * Approve or reject a leave request
-     */
     @PatchMapping("/{leaveId}/approve")
     public ResponseEntity<LeaveDto.LeaveResponse> approveOrRejectLeave(
             @PathVariable Long leaveId,
@@ -59,27 +45,18 @@ public class ManagerLeaveController {
         }
     }
     
-    /**
-     * View all leave requests (all statuses)
-     */
     @GetMapping("/all")
     public ResponseEntity<List<Leave>> getAllLeaves() {
         List<Leave> leaves = leaveService.getAllLeaves();
         return ResponseEntity.ok(leaves);
     }
     
-    /**
-     * View leave requests by status
-     */
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Leave>> getLeavesByStatus(@PathVariable LeaveStatus status) {
         List<Leave> leaves = leaveService.getLeavesByStatus(status);
         return ResponseEntity.ok(leaves);
     }
     
-    /**
-     * View specific employee's leave history
-     */
     @GetMapping("/employee/{userId}")
     public ResponseEntity<List<Leave>> getEmployeeLeaves(@PathVariable Long userId) {
         List<Leave> leaves = leaveService.getLeavesByUserId(userId);

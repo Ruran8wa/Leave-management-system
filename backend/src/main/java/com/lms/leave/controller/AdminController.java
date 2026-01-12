@@ -23,16 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Admin/HR Controller - Administrative functions
- * 
- * Functions:
- * - Manage public holidays
- * - Adjust leave balances
- * - View all leave calendars
- * - Generate reports
- * - Process year-end carryover
- */
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -45,9 +35,6 @@ public class AdminController {
     
     // ========== Public Holiday Management ==========
     
-    /**
-     * Get pending leave requests from STAFF users only (for admin approval)
-     */
     @GetMapping("/leaves/pending-staff")
     @Operation(summary = "Get pending leave requests from staff users only")
     public ResponseEntity<List<Leave>> getPendingStaffLeaves() {
@@ -55,9 +42,6 @@ public class AdminController {
         return ResponseEntity.ok(pendingStaffLeaves);
     }
     
-    /**
-     * Approve a staff leave request
-     */
     @PatchMapping("/leaves/{leaveId}/approve")
     @Operation(summary = "Approve a leave request")
     public ResponseEntity<LeaveDto.LeaveResponse> approveLeave(
@@ -73,9 +57,6 @@ public class AdminController {
         }
     }
     
-    /**
-     * Reject a staff leave request
-     */
     @PatchMapping("/leaves/{leaveId}/reject")
     @Operation(summary = "Reject a leave request")
     public ResponseEntity<LeaveDto.LeaveResponse> rejectLeave(

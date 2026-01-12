@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Public Holiday Repository
- */
 @Repository
 public interface PublicHolidayRepository extends JpaRepository<PublicHoliday, Long> {
     

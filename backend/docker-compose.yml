@@ -1,0 +1,46 @@
+name: lms
+
+services:
+  app:
+    image: lms-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: local  # Add this line
+      DATABASE_URL: jdbc:postgresql://database:5432/lmsdb
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: your-secret-key-change-in-production
+      PORT: 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - lms-network
+
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: lmsdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lmsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lms-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  lms-network:
+    driver: bridge

@@ -1,0 +1,142 @@
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard h1 {
+  margin: 0 0 2rem 0;
+  color: #2c3e50;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+}
+
+.balance-list,
+.leave-list,
+.holiday-list,
+.colleagues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.balance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.balance-type {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.balance-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.balance-remaining {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.balance-total {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
+
+.leave-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  gap: 0.5rem;
+}
+
+.leave-dates {
+  font-size: 0.875rem;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.leave-type {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
+
+.leave-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.holiday-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.holiday-date {
+  font-weight: 500;
+  color: #667eea;
+  min-width: 100px;
+}
+
+.holiday-name {
+  color: #2c3e50;
+}
+
+.colleague-item {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.colleague-name {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.colleague-dates {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
+
+.no-data {
+  text-align: center;
+  color: #95a5a6;
+  padding: 2rem;
+  font-style: italic;
+}

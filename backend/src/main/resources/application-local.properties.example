@@ -1,0 +1,12 @@
+# Local Development Secrets - EXAMPLE FILE
+# Copy this file to application-local.properties and add your real credentials
+# application-local.properties is git-ignored and won't be committed
+
+# JWT Configuration
+jwt.secret=YourSecretKeyMustBeAtLeast256BitsLongForHS256AlgorithmToWorkProperly
+jwt.expiration=86400000
+
+# Google OAuth2 Configuration
+# Get your credentials from: https://console.cloud.google.com/apis/credentials
+spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID_HERE
+spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET_HERE
